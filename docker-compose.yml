@@ -1,0 +1,11 @@
+services:
+  db:
+    user: root
+    container_name: bienesRaices
+    image: mysql:8.0-bookworm
+    volumes:
+      - ./bienesRaices:/var/lib/mysql
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root

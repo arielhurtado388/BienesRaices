@@ -1,0 +1,20 @@
+extends ../layout/index
+
+block contenido 
+    .p-10
+        h1.text-4xl.my-10.font-extrabold.text-center Bienes
+            span.font-normal Raíces
+        h2(class="text-center text-2xl font-extrabold")= pagina
+
+        .mt-8.mx-auto.max-w-md
+            .bg-white.py-8.px-4.shadow
+                form(class="space-y-5")
+                    div 
+                        label(class="block text-sm uppercase text-gray-500 mb-4 font-bold")(for="correo") Correo
+                        input#correo(class="w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400")(placeholder="Tu correo" type="email" name="correo")                  
+
+                    div.flex.items-center.justify-between
+                        a(class="text-gray-500 text-xs"  href="/auth/registro") ¿No tienes cuenta? Crea una
+                        a(class="text-gray-500 text-xs"  href="/auth/login") ¿Ya tienes cuenta? Inicia sesión
+
+                    input(class="w-full bg-indigo-600 hover:bg-indigo-700 cursor-pointer text-white font-bold py-3" type="submit" value="Enviar instrucciones")
