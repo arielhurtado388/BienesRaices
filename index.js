@@ -5,9 +5,13 @@ import db from "./config/db.js";
 // Crear la app
 const app = express();
 
+// Habilitar lectura de datos de formularios
+app.use(express.urlencoded({ extended: true }));
+
 // Conexion a la BD
 try {
   await db.authenticate();
+  db.sync();
   console.log("Conexion correcta");
 } catch (error) {
   console.log(error);
