@@ -1,5 +1,6 @@
 import { check, validationResult } from "express-validator";
 import Usuario from "../models/Usuario.js";
+import { generarId } from "../helpers/tokens.js";
 
 const formularioLogin = (req, res) => {
   res.render("auth/login", {
@@ -48,8 +49,39 @@ const registrar = async (req, res) => {
       },
     });
   }
-  const usuario = await Usuario.create(req.body);
-  res.json(usuario);
+
+  // Extraer los datos
+  const { nombre, correo, password } = req.body;
+
+  // Verificar que el usuario sea unico
+  const existeUsuario = await Usuario.findOne({
+    where: { correo },
+  });
+
+  if (existeUsuario) {
+    return res.render("auth/registro", {
+      pagina: "Crear cuenta",
+      errores: [{ msg: "El usuario ya está registrado" }],
+      usuario: {
+        nombre: nombre,
+        correo: correo,
+      },
+    });
+  }
+
+  // Guardar usuario
+  await Usuario.create({
+    nombre,
+    correo,
+    password,
+    token: generarId(),
+  });
+
+  // Mostrar mensaje de confirmacion
+  res.render("templates/mensaje", {
+    pagina: "Cuenta creada correctamente",
+    mensaje: "Hemos enviado un correo de confirmación, presiona en el enlace",
+  });
 };
 
 const formularioOlvidePassword = (req, res) => {
