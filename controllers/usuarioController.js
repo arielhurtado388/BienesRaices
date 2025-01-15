@@ -1,6 +1,7 @@
 import { check, validationResult } from "express-validator";
 import Usuario from "../models/Usuario.js";
 import { generarId } from "../helpers/tokens.js";
+import { correoRegistro } from "../helpers/correos.js";
 
 const formularioLogin = (req, res) => {
   res.render("auth/login", {
@@ -11,6 +12,7 @@ const formularioLogin = (req, res) => {
 const formularioRegistro = (req, res) => {
   res.render("auth/registro", {
     pagina: "Crear cuenta",
+    csrfToken: req.csrfToken(),
   });
 };
 const registrar = async (req, res) => {
@@ -42,6 +44,7 @@ const registrar = async (req, res) => {
     // Errores
     return res.render("auth/registro", {
       pagina: "Crear cuenta",
+      csrfToken: req.csrfToken(),
       errores: resultado.array(),
       usuario: {
         nombre: req.body.nombre,
@@ -61,6 +64,7 @@ const registrar = async (req, res) => {
   if (existeUsuario) {
     return res.render("auth/registro", {
       pagina: "Crear cuenta",
+      csrfToken: req.csrfToken(),
       errores: [{ msg: "El usuario ya está registrado" }],
       usuario: {
         nombre: nombre,
@@ -70,11 +74,18 @@ const registrar = async (req, res) => {
   }
 
   // Guardar usuario
-  await Usuario.create({
+  const usuario = await Usuario.create({
     nombre,
     correo,
     password,
     token: generarId(),
+  });
+
+  // Enviar correo de confirmacion
+  correoRegistro({
+    nombre: usuario.nombre,
+    correo: usuario.correo,
+    token: usuario.token,
   });
 
   // Mostrar mensaje de confirmacion
@@ -90,9 +101,32 @@ const formularioOlvidePassword = (req, res) => {
   });
 };
 
+const confirmar = async (req, res) => {
+  const { token } = req.params;
+  // Verificar si el token es valido
+  const usuario = await Usuario.findOne({ where: { token } });
+  if (!usuario) {
+    return res.render("auth/confirmar", {
+      pagina: "Error al confirmar tu cuenta",
+      mensaje: "Hubo un error al confirmar tu cuenta, intenta de nuevo",
+      error: true,
+    });
+  }
+  // Confirmar la cuenta
+  usuario.token = null;
+  usuario.confirmado = true;
+  await usuario.save();
+
+  res.render("auth/confirmar", {
+    pagina: "Cuenta confirmada",
+    mensaje: "La cuenta se confirmó correctamente",
+  });
+};
+
 export {
   formularioLogin,
   formularioRegistro,
   registrar,
   formularioOlvidePassword,
+  confirmar,
 };
