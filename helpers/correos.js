@@ -32,4 +32,33 @@ const correoRegistro = async (datos) => {
   });
 };
 
-export { correoRegistro };
+const correoOlvide = async (datos) => {
+  const transport = nodemailer.createTransport({
+    host: EMAIL_HOST,
+    port: EMAIL_PORT,
+    auth: {
+      user: EMAIL_USER,
+      pass: EMAIL_PASS,
+    },
+  });
+  const { nombre, correo, token } = datos;
+
+  //   Enviar el correo
+  await transport.sendMail({
+    from: "BIenesRaices.com",
+    to: correo,
+    subject: "Recuperar contraseña",
+    text: "Recupera tu contraseña en BienesRaices.com",
+    html: `
+    <p>Hola ${nombre}, has solicitado reestablecer tu contraseña en BienesRaices</p>
+    <p>Presiona el siguiente enlace para generar una nueva contraseña: 
+        <a href="${BACKEND_URL}:${
+      process.env.PORT ?? 3000
+    }/auth/olvide/${token}">Recuperar contraseña</a>
+    </p>
+    <p>Si tú no solicitaste este cambio, puedes ignorar este mensaje</p>
+    `,
+  });
+};
+
+export { correoRegistro, correoOlvide };

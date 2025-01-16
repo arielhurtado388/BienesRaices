@@ -1,7 +1,8 @@
 import { check, validationResult } from "express-validator";
+import bcrypt from "bcrypt";
 import Usuario from "../models/Usuario.js";
 import { generarId } from "../helpers/tokens.js";
-import { correoRegistro } from "../helpers/correos.js";
+import { correoRegistro, correoOlvide } from "../helpers/correos.js";
 
 const formularioLogin = (req, res) => {
   res.render("auth/login", {
@@ -98,6 +99,112 @@ const registrar = async (req, res) => {
 const formularioOlvidePassword = (req, res) => {
   res.render("auth/olvide", {
     pagina: "Recuperar acceso",
+    csrfToken: req.csrfToken(),
+  });
+};
+
+const resetPassword = async (req, res) => {
+  // Validacion
+
+  await check("correo")
+    .isEmail()
+    .withMessage("El correo no es válido")
+    .run(req);
+
+  let resultado = validationResult(req);
+
+  // Verificar que resultado este vacio
+  if (!resultado.isEmpty()) {
+    // Errores
+    return res.render("auth/olvide", {
+      pagina: "Recuperar acceso",
+      csrfToken: req.csrfToken(),
+      errores: resultado.array(),
+    });
+  }
+
+  // Buscar usuario
+  const { correo } = req.body;
+  const usuario = await Usuario.findOne({ where: { correo } });
+  if (!usuario) {
+    return res.render("auth/olvide", {
+      pagina: "Recuperar acceso",
+      csrfToken: req.csrfToken(),
+      errores: [{ msg: "El usuario no existe" }],
+    });
+  }
+
+  // Generar un token y enviar el email
+  usuario.token = generarId();
+  await usuario.save();
+
+  // Enviar email
+  correoOlvide({
+    nombre: usuario.nombre,
+    correo: usuario.correo,
+    token: usuario.token,
+  });
+  // Redenderizar mensaje de instrucciones
+  res.render("templates/mensaje", {
+    pagina: "Recupera tu contraseña",
+    mensaje:
+      "Hemos enviado un correo con las instrucciones, presiona en el enlace",
+  });
+};
+
+const comprobarToken = async (req, res) => {
+  const { token } = req.params;
+  const usuario = await Usuario.findOne({ where: { token } });
+  if (!usuario) {
+    return res.render("auth/confirmar", {
+      pagina: "Recupera tu contraseña",
+      mensaje: "Hubo un error al validar tu información, intenta de nuevo",
+      error: true,
+    });
+  }
+
+  // Mostrar un formulario para modificar el password
+  res.render("auth/reset", {
+    pagina: "Recupera tu contraseña",
+    csrfToken: req.csrfToken(),
+  });
+};
+
+const nuevoPassword = async (req, res) => {
+  // Validar el password
+  await check("password")
+    .isLength({ min: 6 })
+    .withMessage("La contraseña debe tener al menos 6 caracteres")
+    .run(req);
+
+  let resultado = validationResult(req);
+
+  // Verificar que resultado este vacio
+  if (!resultado.isEmpty()) {
+    // Errores
+    return res.render("auth/reset", {
+      pagina: "Recupera tu contraseña",
+      csrfToken: req.csrfToken(),
+      errores: resultado.array(),
+    });
+  }
+
+  const { token } = req.params;
+  const { password } = req.body;
+  // Identificar quien hace el cambio
+
+  const usuario = await Usuario.findOne({ where: { token } });
+  usuario.password = "";
+
+  // Hashear el nuevo password
+  const salt = await bcrypt.genSalt(10);
+  usuario.password = await bcrypt.hash(password, salt);
+  usuario.token = null;
+  await usuario.save();
+
+  res.render("auth/confirmar", {
+    pagina: "Contraseña reestablecida",
+    mensaje: "La contraseña ha sido guardada correctamente",
   });
 };
 
@@ -128,5 +235,8 @@ export {
   formularioRegistro,
   registrar,
   formularioOlvidePassword,
+  resetPassword,
   confirmar,
+  comprobarToken,
+  nuevoPassword,
 };
