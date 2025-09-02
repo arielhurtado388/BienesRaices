@@ -4,6 +4,10 @@ import authRoutes from "./routes/authRoutes.js";
 // Crear la app
 const app = express();
 
+// Habilitar Pug
+app.set("view engine", "pug");
+app.set("views", "./views");
+
 // Routing
 app.use("/auth", authRoutes);
 
