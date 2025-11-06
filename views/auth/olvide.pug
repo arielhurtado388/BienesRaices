@@ -14,12 +14,8 @@ block contenido
                         label.block.text-sm.uppercase.text-gray-500.mb-2.font-bold(for="correo") Correo
                         input#correo.w-full.py-2.px-3.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="Tu correo" type="email" name="correo")
                     
-                    div 
-                        label.block.text-sm.uppercase.text-gray-500.mb-2.font-bold(for="contrasena") Contraseña
-                        input#contrasena.w-full.py-2.px-3.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="Tu contraseña" type="password" name="contrasena")
-
                     div(class="flex items-center justify-between")
                         a(class="text-gray-500 text-xs" href="/auth/registro") ¿No tienes una cuenta? Crea una 
-                        a(class="text-gray-500 text-xs" href="/auth/olvide") Olvidé mi contraseña 
+                        a(class="text-gray-500 text-xs" href="/auth/login") ¿Ya tienes una cuenta? Inicia sesión 
 
-                    input(class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 cursor-pointer" type="submit" value="Iniciar sesión")
+                    input(class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 cursor-pointer" type="submit" value="Enviar instrucciones")

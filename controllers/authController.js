@@ -1,5 +1,7 @@
 const formularioLogin = (req, res) => {
-  res.render("auth/login", {});
+  res.render("auth/login", {
+    pagina: "Iniciar sesión",
+  });
 };
 
 const formularioRegistro = (req, res) => {
@@ -8,4 +10,10 @@ const formularioRegistro = (req, res) => {
   });
 };
 
-export { formularioLogin, formularioRegistro };
+const formularioOlvide = (req, res) => {
+  res.render("auth/olvide", {
+    pagina: "Olvidé mi contraseña",
+  });
+};
+
+export { formularioLogin, formularioRegistro, formularioOlvide };
