@@ -30,4 +30,9 @@ const Usuario = db.define(
   }
 );
 
+// Metodos personalizados
+Usuario.prototype.verificarContrasena = function (contrasena) {
+  return bcrypt.compareSync(contrasena, this.contrasena);
+};
+
 export default Usuario;

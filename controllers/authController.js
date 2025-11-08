@@ -1,11 +1,10 @@
 import { check, validationResult } from "express-validator";
 import Usuario from "../models/Usuario.js";
-import { generarToken } from "../helpers/tokens.js";
+import { generarJwtToken, generarToken } from "../helpers/tokens.js";
 import {
   correoReestablecer,
   correoRegistro,
 } from "../helpers/correosCuenta.js";
-
 import bcrypt from "bcrypt";
 
 const formularioLogin = (req, res) => {
@@ -13,6 +12,70 @@ const formularioLogin = (req, res) => {
     pagina: "Iniciar sesión",
     csrfToken: req.csrfToken(),
   });
+};
+
+const autenticar = async (req, res) => {
+  await check("correo")
+    .isEmail()
+    .withMessage("El correo es obligatorio")
+    .run(req);
+  await check("contrasena")
+    .notEmpty()
+    .withMessage("La contraseña es obligatoria")
+    .run(req);
+
+  let resultado = validationResult(req);
+
+  if (!resultado.isEmpty()) {
+    return res.render("auth/login", {
+      pagina: "Iniciar sesión",
+      csrfToken: req.csrfToken(),
+      errores: resultado.array(),
+    });
+  }
+
+  const { correo, contrasena } = req.body;
+
+  const usuario = await Usuario.findOne({
+    where: {
+      correo,
+    },
+  });
+
+  if (!usuario) {
+    return res.render("auth/login", {
+      pagina: "Iniciar sesión",
+      csrfToken: req.csrfToken(),
+      errores: [{ msg: "El usuario no está registrado" }],
+    });
+  }
+  if (!usuario.confirmado) {
+    return res.render("auth/login", {
+      pagina: "Iniciar sesión",
+      csrfToken: req.csrfToken(),
+      errores: [{ msg: "El usuario no está confirmado" }],
+    });
+  }
+
+  if (!usuario.verificarContrasena(contrasena)) {
+    return res.render("auth/login", {
+      pagina: "Iniciar sesión",
+      csrfToken: req.csrfToken(),
+      errores: [{ msg: "La contraseña es incorrecta" }],
+    });
+  }
+
+  // Autenticar con JWT
+  const jwtToken = generarJwtToken(usuario.id);
+
+  // Almacenar en un cookie
+  return res
+    .cookie("_jwtToken", jwtToken, {
+      httpOnly: true,
+      // secure: true,
+      // sameSite: true
+    })
+    .redirect("/mis-propiedades");
 };
 
 const formularioRegistro = (req, res) => {
@@ -239,6 +302,7 @@ const nuevaContrasena = async (req, res) => {
 
 export {
   formularioLogin,
+  autenticar,
   formularioRegistro,
   registrar,
   confirmarCuenta,
