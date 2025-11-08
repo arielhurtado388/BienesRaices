@@ -6,6 +6,7 @@ import db from "./config/db.js";
 
 // Crear la app
 const app = express();
+app.use(express.json());
 
 // Habilitar lectura de datos de formularios
 app.use(express.urlencoded({ extended: true }));
