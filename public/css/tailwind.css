@@ -1,1 +1,5 @@
 @import "tailwindcss";
+
+.border-imagen {
+  border: 2px dashed rgba(0, 0, 0, 0.3);
+}
