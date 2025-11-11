@@ -72,6 +72,7 @@ const autenticar = async (req, res) => {
   return res
     .cookie("_jwtToken", jwtToken, {
       httpOnly: true,
+      // expires: 9000,
       // secure: true,
       // sameSite: true
     })
