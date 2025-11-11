@@ -16,12 +16,6 @@ const Propiedad = db.define("propiedades", {
     type: DataTypes.TEXT,
     allowNull: false,
   },
-  //   categoria: {
-
-  //   },
-  //   precio: {
-
-  //   }
   habitaciones: {
     type: DataTypes.INTEGER,
     allowNull: false,
