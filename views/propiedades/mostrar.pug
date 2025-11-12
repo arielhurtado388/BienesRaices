@@ -12,6 +12,8 @@ block contenido
         div
             a(class="font-bold text-gray-600 text-sm" href="#") Categoría: 
                 span.font-normal= propiedad.categoria.nombre
+            p(class="font-bold text-gray-600 text-sm") Publicado por: 
+                span.font-normal= propiedad.usuario.nombre
 
         div(class="mt-5 md:flex md:gap-4")
             div(class="md:w-2/3 bg-white shadow rounded-lg")

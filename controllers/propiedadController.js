@@ -3,29 +3,59 @@ import { validationResult } from "express-validator";
 import { Categoria, Precio, Propiedad, Usuario } from "../models/index.js";
 
 const admin = async (req, res) => {
-  const { id } = req.usuario;
+  // Leer query string
+  const { pagina: paginaActual } = req.query;
+  const expresion = /^[1-9]$/;
+  if (!expresion.test(paginaActual)) {
+    return res.redirect("/mis-propiedades?pagina=1");
+  }
 
-  const propiedades = await Propiedad.findAll({
-    where: {
-      idUsuario: id,
-    },
-    include: [
-      {
-        model: Categoria,
-        as: "categoria",
-      },
-      {
-        model: Precio,
-        as: "precio",
-      },
-    ],
-  });
+  try {
+    const { id } = req.usuario;
 
-  res.render("propiedades/admin", {
-    pagina: "Mis propiedades",
-    csrfToken: req.csrfToken(),
-    propiedades,
-  });
+    // Limites y offset para el paginador
+    const limit = 10;
+    const offset = paginaActual * limit - limit;
+
+    const [propiedades, total] = await Promise.all([
+      Propiedad.findAll({
+        limit,
+        offset,
+        where: {
+          idUsuario: id,
+        },
+        order: [["updatedAt", "DESC"]],
+        include: [
+          {
+            model: Categoria,
+            as: "categoria",
+          },
+          {
+            model: Precio,
+            as: "precio",
+          },
+        ],
+      }),
+      Propiedad.count({
+        where: {
+          idUsuario: id,
+        },
+      }),
+    ]);
+
+    res.render("propiedades/admin", {
+      pagina: "Mis propiedades",
+      csrfToken: req.csrfToken(),
+      propiedades,
+      paginas: Math.ceil(total / limit),
+      paginaActual: Number(paginaActual),
+      total,
+      offset,
+      limit,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const crear = async (req, res) => {
@@ -289,6 +319,7 @@ const mostrarPropiedad = async (req, res) => {
     include: [
       { model: Precio, as: "precio" },
       { model: Categoria, as: "categoria" },
+      { model: Usuario, as: "usuario" },
     ],
   });
 
