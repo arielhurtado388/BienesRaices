@@ -34,9 +34,10 @@ block contenido
                                     form(action="#")
                                         input(class=`${propiedad.publicada ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"} px-2 py-2 md:py-1 text-xs font-semibold leading-5 rounded cursor-pointer w-full` type="submit" value=`${propiedad.publicada ? "Publicada" : "No publicada"}`) 
                                     
-                                    a(class="px-2 py-2 md:py-1 text-xs font-semibold leading-5 rounded cursor-pointer bg-indigo-100 text-indigo-800 text-center" href="#")= "Editar"
+                                    a(class="px-2 py-2 md:py-1 text-xs font-semibold leading-5 rounded cursor-pointer bg-indigo-100 text-indigo-800 text-center" href=`/propiedades/editar/${propiedad.id}`)= "Editar"
 
-                                    form(action="#")
+                                    form(action=`/propiedades/eliminar/${propiedad.id}` method="POST")
+                                        input(type="hidden" name="_csrf" value=csrfToken)
                                         input(class="px-2 py-2 md:py-1 text-xs font-semibold leading-5 rounded cursor-pointer bg-red-100 text-red-800 w-full" type="submit" value="Eliminar") 
 
         else 
