@@ -1,7 +1,8 @@
 header.bg-indigo-600.p-4 
             div(class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center")
-                h1(class="text-2xl text-white font-extrabold text-center") Bienes
-                    span.font-normal Raíces
+                a(href="/") 
+                    h1(class="text-2xl text-white font-extrabold text-center") Bienes
+                        span.font-normal Raíces
 
                 nav(class="my-5 text-sm flex  gap-3 items-center font-bold text-white") 
                     a(href="/auth/registro") Crear cuenta
@@ -9,9 +10,16 @@ header.bg-indigo-600.p-4
 
 //- hidden lg:block
 div(class="bg-indigo-700 p-4") 
-    div(class="max-w-7xl mx-auto flex flex-col md:flex-row gap-4 justify-between")
-        a(class="text-sm font-bold uppercase text-white" href="/categorias/1") Casas 
-        a(class="text-sm font-bold uppercase text-white" href="/categorias/2") Departamentos 
-        a(class="text-sm font-bold uppercase text-white" href="/categorias/3") Bodegas 
-        a(class="text-sm font-bold uppercase text-white" href="/categorias/4") Terrenos 
-        a(class="text-sm font-bold uppercase text-white" href="/categorias/5") Cabañas 
+    div(class="max-w-7xl mx-auto flex flex-col md:flex-row gap-8 justify-between sm:items-center")
+        nav(class="flex gap-4 overflow-x-auto")
+            a(class="text-sm font-bold uppercase text-white" href="/categorias/1") Casas 
+            a(class="text-sm font-bold uppercase text-white" href="/categorias/2") Departamentos 
+            a(class="text-sm font-bold uppercase text-white" href="/categorias/3") Bodegas 
+            a(class="text-sm font-bold uppercase text-white" href="/categorias/4") Terrenos 
+            a(class="text-sm font-bold uppercase text-white" href="/categorias/5") Cabañas
+
+        form(class="flex gap-3 items-center mx-auto sm:mx-0" action="/buscador" method="POST")
+            input(type="hidden" name="_csrf" value= csrfToken)
+            //- label(class="text-sm uppercase font-bold text-white" for="termino") Búsqueda
+            input(class="p-2 rounded-lg shadow bg-white text-sm" id="termino" type="text" name="termino" placeholder="Buscar propiedades")
+            input(class="bg-indigo-800 hover:bg-indigo-400 rounded-lg text-white uppercase font-bold p-2 cursor-pointer text-sm" type="submit" value="Buscar")

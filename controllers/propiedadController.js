@@ -329,6 +329,7 @@ const mostrarPropiedad = async (req, res) => {
 
   res.render("propiedades/mostrar", {
     pagina: propiedad.titulo,
+    csrfToken: req.csrfToken(),
     propiedad,
   });
 };
