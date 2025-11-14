@@ -6,6 +6,7 @@ import {
   crear,
   editar,
   eliminar,
+  enviarMensaje,
   guardar,
   guardarCambios,
   mostrarPropiedad,
@@ -13,6 +14,7 @@ import {
 } from "../controllers/propiedadController.js";
 import protegerRuta from "../middleware/protegerRuta.js";
 import upload from "../middleware/subirImagen.js";
+import identificarUsuario from "../middleware/identificarUsuario.js";
 
 const router = express.Router();
 
@@ -73,6 +75,16 @@ router.post(
 router.post("/propiedades/eliminar/:id", protegerRuta, eliminar);
 
 // Area publica
-router.get("/propiedad/:id", mostrarPropiedad);
+router.get("/propiedad/:id", identificarUsuario, mostrarPropiedad);
+
+// Almacenar los mensajes
+router.post(
+  "/propiedad/:id",
+  identificarUsuario,
+  body("mensaje")
+    .isLength({ min: 10, max: 1500 })
+    .withMessage("El mensaje es muy corto o demasiado largo"),
+  enviarMensaje
+);
 
 export default router;
