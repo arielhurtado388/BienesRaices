@@ -384,6 +384,8 @@ const enviarMensaje = async (req, res) => {
     idUsuario: req.usuario.id,
   });
 
+  // TODO: Enviar alerta al correo del usuario sobre un nuevo mensaje
+
   // res.redirect("/");
 
   res.render("propiedades/mostrar", {
