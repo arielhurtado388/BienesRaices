@@ -7,6 +7,7 @@ import Mensaje from "./Mensaje.js";
 Propiedad.belongsTo(Precio, { foreignKey: "idPrecio" });
 Propiedad.belongsTo(Categoria, { foreignKey: "idCategoria" });
 Propiedad.belongsTo(Usuario, { foreignKey: "idUsuario" });
+Propiedad.hasMany(Mensaje, { foreignKey: "idPropiedad" });
 Mensaje.belongsTo(Propiedad, { foreignKey: "idPropiedad" });
 Mensaje.belongsTo(Usuario, { foreignKey: "idUsuario" });
 

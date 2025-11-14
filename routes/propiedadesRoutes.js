@@ -11,6 +11,7 @@ import {
   guardarCambios,
   mostrarPropiedad,
   subirImagen,
+  verMensajes,
 } from "../controllers/propiedadController.js";
 import protegerRuta from "../middleware/protegerRuta.js";
 import upload from "../middleware/subirImagen.js";
@@ -86,5 +87,7 @@ router.post(
     .withMessage("El mensaje es muy corto o demasiado largo"),
   enviarMensaje
 );
+
+router.get("/mensajes/:id", protegerRuta, verMensajes);
 
 export default router;

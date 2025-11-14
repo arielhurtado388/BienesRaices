@@ -7,7 +7,7 @@ import {
   Usuario,
   Mensaje,
 } from "../models/index.js";
-import esVendedor from "../helpers/index.js";
+import { esVendedor, formatearFecha } from "../helpers/index.js";
 
 const admin = async (req, res) => {
   // Leer query string
@@ -40,6 +40,10 @@ const admin = async (req, res) => {
           {
             model: Precio,
             as: "precio",
+          },
+          {
+            model: Mensaje,
+            as: "mensajes",
           },
         ],
       }),
@@ -392,6 +396,41 @@ const enviarMensaje = async (req, res) => {
   });
 };
 
+// Leer mensajes recibidos
+const verMensajes = async (req, res) => {
+  const { id } = req.params;
+  // Validar que exista la propiedad
+  const propiedad = await Propiedad.findByPk(id, {
+    include: [
+      {
+        model: Mensaje,
+        as: "mensajes",
+        include: [
+          {
+            model: Usuario.scope("eliminarContrasena"),
+            as: "usuario",
+          },
+        ],
+      },
+    ],
+  });
+
+  if (!propiedad) {
+    return res.redirect("/mis-propiedades");
+  }
+
+  // Quien ve la url es quien creo la propiedad
+  if (propiedad.idUsuario.toString() !== req.usuario.id.toString()) {
+    return res.redirect("/mis-propiedades");
+  }
+
+  res.render("propiedades/mensajes", {
+    pagina: "Mensajes",
+    mensajes: propiedad.mensajes,
+    formatearFecha,
+  });
+};
+
 export {
   admin,
   crear,
@@ -403,4 +442,5 @@ export {
   eliminar,
   mostrarPropiedad,
   enviarMensaje,
+  verMensajes,
 };
