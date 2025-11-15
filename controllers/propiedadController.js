@@ -8,6 +8,7 @@ import {
   Mensaje,
 } from "../models/index.js";
 import { esVendedor, formatearFecha } from "../helpers/index.js";
+import { correoNuevoMensaje } from "../helpers/correosCuenta.js";
 
 const admin = async (req, res) => {
   // Leer query string
@@ -407,7 +408,17 @@ const enviarMensaje = async (req, res) => {
     idUsuario: req.usuario.id,
   });
 
-  // TODO: Enviar alerta al correo del usuario sobre un nuevo mensaje
+  // Enviar correo de notificación al vendedor
+  correoNuevoMensaje({
+    nombreVendedor: propiedad.usuario.nombre,
+    correoVendedor: propiedad.usuario.correo,
+    nombreInteresado: req.usuario.nombre,
+    tituloPropiedad: propiedad.titulo,
+    mensaje: req.body.mensaje,
+    urlPropiedad: `${process.env.BACKEND_URL}:${
+      process.env.PORT ?? 3000
+    }/mensajes/${id}`,
+  });
 
   // res.redirect("/");
 
