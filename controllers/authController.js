@@ -79,6 +79,10 @@ const autenticar = async (req, res) => {
     .redirect("/mis-propiedades");
 };
 
+const cerrarSesion = (req, res) => {
+  return res.clearCookie("_jwtToken").status(200).redirect("/");
+};
+
 const formularioRegistro = (req, res) => {
   res.render("auth/registro", {
     pagina: "Crear cuenta",
@@ -304,6 +308,7 @@ const nuevaContrasena = async (req, res) => {
 export {
   formularioLogin,
   autenticar,
+  cerrarSesion,
   formularioRegistro,
   registrar,
   confirmarCuenta,
