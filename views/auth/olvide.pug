@@ -2,9 +2,10 @@ extends ../layout/index
 
 block contenido
     div.py-10
-        a(href="/") 
-            h1.text-4xl.my-10.font-extrabold.text-center Bienes
-                span.font-normal Raíces 
+        a(href="/")
+            img(class="h-29 rounded-full object-cover object-center flex mx-auto mb-6" src="/img/logo.webp", alt="Logo") 
+            //- h1.text-4xl.my-10.font-extrabold.text-center Bienes
+            //-     span.font-normal Raíces 
         h2.text-2xl.text-center.font-extrabold= pagina
 
         if errores
