@@ -52,9 +52,9 @@ const correoRegistro = async (datos) => {
             <p>Para completar tu registro y comenzar a publicar tus propiedades, solo necesitas confirmar tu cuenta:</p>
             
             <div style="text-align: center;">
-              <a href="${process.env.BACKEND_URL}:${
-      process.env.PORT ?? 3000
-    }/auth/confirmar/${token}" class="button">
+              <a href="${
+                process.env.BACKEND_URL
+              }/auth/confirmar/${token}" class="button">
                 Confirmar mi cuenta
               </a>
             </div>
@@ -131,9 +131,9 @@ const correoReestablecer = async (datos) => {
             <p>Hemos recibido una solicitud para restablecer la contraseña de tu cuenta en BienesRaices.</p>
             
             <div style="text-align: center;">
-              <a href="${process.env.BACKEND_URL}:${
-      process.env.PORT ?? 3000
-    }/auth/olvide/${token}" class="button">
+              <a href="${
+                process.env.BACKEND_URL
+              }/auth/olvide/${token}" class="button">
                 Restablecer contraseña
               </a>
             </div>

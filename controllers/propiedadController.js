@@ -415,9 +415,7 @@ const enviarMensaje = async (req, res) => {
     nombreInteresado: req.usuario.nombre,
     tituloPropiedad: propiedad.titulo,
     mensaje: req.body.mensaje,
-    urlPropiedad: `${process.env.BACKEND_URL}:${
-      process.env.PORT ?? 3000
-    }/mensajes/${id}`,
+    urlPropiedad: `${process.env.BACKEND_URL}/mensajes/${id}`,
   });
 
   // res.redirect("/");
