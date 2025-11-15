@@ -9,6 +9,7 @@ const inicio = async (req, res) => {
       limit: 3,
       where: {
         idCategoria: 1,
+        publicada: 1,
       },
       include: [
         {
@@ -23,6 +24,7 @@ const inicio = async (req, res) => {
       limit: 3,
       where: {
         idCategoria: 2,
+        publicada: 1,
       },
       include: [
         {
@@ -56,6 +58,7 @@ const categoria = async (req, res) => {
   const propiedades = await Propiedad.findAll({
     where: {
       idCategoria: id,
+      publicada: 1,
     },
     include: [
       {
@@ -93,6 +96,7 @@ const buscador = async (req, res) => {
       titulo: {
         [Sequelize.Op.like]: "%" + termino + "%",
       },
+      publicada: 1,
     },
     include: [
       {

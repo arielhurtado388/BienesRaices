@@ -3,6 +3,7 @@ import { body } from "express-validator";
 import {
   admin,
   agregarImagen,
+  cambiarEstado,
   crear,
   editar,
   eliminar,
@@ -74,6 +75,7 @@ router.post(
 );
 
 router.post("/propiedades/eliminar/:id", protegerRuta, eliminar);
+router.put("/propiedades/:id", protegerRuta, cambiarEstado);
 
 // Area publica
 router.get("/propiedad/:id", identificarUsuario, mostrarPropiedad);
