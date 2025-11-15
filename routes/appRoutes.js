@@ -5,19 +5,20 @@ import {
   noEncontrado,
   buscador,
 } from "../controllers/appController.js";
+import identificarUsuario from "../middleware/identificarUsuario.js";
 
 const router = express.Router();
 
 // Inicio
-router.get("/", inicio);
+router.get("/", identificarUsuario, inicio);
 
 // Categorias
-router.get("/categorias/:id", categoria);
+router.get("/categorias/:id", identificarUsuario, categoria);
 
 // 404
-router.get("/404", noEncontrado);
+router.get("/404", identificarUsuario, noEncontrado);
 
 // Buscador
-router.post("/buscador", buscador);
+router.post("/buscador", identificarUsuario, buscador);
 
 export default router;
