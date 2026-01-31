@@ -2,7 +2,6 @@ import { unlink } from "node:fs/promises";
 import { validationResult } from "express-validator";
 import {
   Categoria,
-  Precio,
   Propiedad,
   Usuario,
   Mensaje,
@@ -39,10 +38,6 @@ const admin = async (req, res) => {
             as: "categoria",
           },
           {
-            model: Precio,
-            as: "precio",
-          },
-          {
             model: Mensaje,
             as: "mensajes",
           },
@@ -71,17 +66,12 @@ const admin = async (req, res) => {
 };
 
 const crear = async (req, res) => {
-  // Consultar precios y categorias
-  const [categorias, precios] = await Promise.all([
-    Categoria.findAll(),
-    Precio.findAll(),
-  ]);
+  const categorias = await Categoria.findAll();
 
   res.render("propiedades/crear", {
     pagina: "Crear propiedad",
     csrfToken: req.csrfToken(),
     categorias,
-    precios,
     datos: {},
   });
 };
@@ -90,24 +80,6 @@ const guardar = async (req, res) => {
   // Validacion
   let resultado = validationResult(req);
 
-  if (!resultado.isEmpty()) {
-    // Consultar precios y categorias
-    const [categorias, precios] = await Promise.all([
-      Categoria.findAll(),
-      Precio.findAll(),
-    ]);
-
-    return res.render("propiedades/crear", {
-      pagina: "Crear propiedad",
-      csrfToken: req.csrfToken(),
-      categorias,
-      precios,
-      errores: resultado.array(),
-      datos: req.body,
-    });
-  }
-
-  // Crear registro
   const {
     titulo,
     descripcion,
@@ -117,9 +89,34 @@ const guardar = async (req, res) => {
     calle,
     lat,
     lng,
-    precio: idPrecio,
+    precio,
     categoria: idCategoria,
+    metrosCuadrados,
   } = req.body;
+
+  // Buscar la categoria para saber si es Terreno
+  const categoriaObj = await Categoria.findByPk(idCategoria);
+  const esTerreno = categoriaObj?.nombre === "Terreno";
+
+  // Validar metros cuadrados si es terreno
+  if (esTerreno && (!metrosCuadrados || parseFloat(metrosCuadrados) <= 0)) {
+    resultado.errors.push({
+      msg: "Los metros cuadrados deben ser mayor a 0",
+      param: "metrosCuadrados",
+    });
+  }
+
+  if (!resultado.isEmpty()) {
+    const categorias = await Categoria.findAll();
+
+    return res.render("propiedades/crear", {
+      pagina: "Crear propiedad",
+      csrfToken: req.csrfToken(),
+      categorias,
+      errores: resultado.array(),
+      datos: req.body,
+    });
+  }
 
   const { id: idUsuario } = req.usuario;
 
@@ -127,14 +124,15 @@ const guardar = async (req, res) => {
     const propiedadAlmacenada = await Propiedad.create({
       titulo,
       descripcion,
-      habitaciones,
-      estacionamientos,
-      banos,
+      habitaciones: esTerreno ? 0 : habitaciones,
+      estacionamientos: esTerreno ? 0 : estacionamientos,
+      banos: esTerreno ? 0 : banos,
+      precio,
+      metrosCuadrados: esTerreno ? metrosCuadrados : null,
       calle,
       lat,
       lng,
       imagen: "",
-      idPrecio,
       idCategoria,
       idUsuario,
     });
@@ -217,17 +215,12 @@ const editar = async (req, res) => {
     return res.redirect("/mis-propiedades");
   }
 
-  // Consultar precios y categorias
-  const [categorias, precios] = await Promise.all([
-    Categoria.findAll(),
-    Precio.findAll(),
-  ]);
+  const categorias = await Categoria.findAll();
 
   res.render("propiedades/editar", {
     pagina: `Editar propiedad: ${propiedad.titulo}`,
     csrfToken: req.csrfToken(),
     categorias,
-    precios,
     datos: propiedad,
   });
 };
@@ -236,18 +229,39 @@ const guardarCambios = async (req, res) => {
   // Validacion
   let resultado = validationResult(req);
 
+  const {
+    titulo,
+    descripcion,
+    habitaciones,
+    estacionamientos,
+    banos,
+    calle,
+    lat,
+    lng,
+    precio,
+    categoria: idCategoria,
+    metrosCuadrados,
+  } = req.body;
+
+  // Buscar la categoria para saber si es Terreno
+  const categoriaObj = await Categoria.findByPk(idCategoria);
+  const esTerreno = categoriaObj?.nombre === "Terreno";
+
+  // Validar metros cuadrados si es terreno
+  if (esTerreno && (!metrosCuadrados || parseFloat(metrosCuadrados) <= 0)) {
+    resultado.errors.push({
+      msg: "Los metros cuadrados deben ser mayor a 0",
+      param: "metrosCuadrados",
+    });
+  }
+
   if (!resultado.isEmpty()) {
-    // Consultar precios y categorias
-    const [categorias, precios] = await Promise.all([
-      Categoria.findAll(),
-      Precio.findAll(),
-    ]);
+    const categorias = await Categoria.findAll();
 
     return res.render("propiedades/editar", {
       pagina: "Editar propiedad",
       csrfToken: req.csrfToken(),
       categorias,
-      precios,
       errores: resultado.array(),
       datos: req.body,
     });
@@ -268,29 +282,17 @@ const guardarCambios = async (req, res) => {
 
   // Reescribir el objeto y actualizarlo
   try {
-    const {
-      titulo,
-      descripcion,
-      habitaciones,
-      estacionamientos,
-      banos,
-      calle,
-      lat,
-      lng,
-      precio: idPrecio,
-      categoria: idCategoria,
-    } = req.body;
-
     propiedad.set({
       titulo,
       descripcion,
-      habitaciones,
-      estacionamientos,
-      banos,
+      habitaciones: esTerreno ? 0 : habitaciones,
+      estacionamientos: esTerreno ? 0 : estacionamientos,
+      banos: esTerreno ? 0 : banos,
+      precio,
+      metrosCuadrados: esTerreno ? metrosCuadrados : null,
       calle,
       lat,
       lng,
-      idPrecio,
       idCategoria,
     });
 
@@ -352,7 +354,6 @@ const mostrarPropiedad = async (req, res) => {
   // Validar que la propiedad exista
   const propiedad = await Propiedad.findByPk(id, {
     include: [
-      { model: Precio, as: "precio" },
       { model: Categoria, as: "categoria" },
       { model: Usuario, as: "usuario" },
     ],
@@ -377,7 +378,6 @@ const enviarMensaje = async (req, res) => {
   // Validar que la propiedad exista
   const propiedad = await Propiedad.findByPk(id, {
     include: [
-      { model: Precio, as: "precio" },
       { model: Categoria, as: "categoria" },
       { model: Usuario, as: "usuario" },
     ],

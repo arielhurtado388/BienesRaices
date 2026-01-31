@@ -1,22 +1,16 @@
 import { Sequelize } from "sequelize";
-import { Precio, Categoria, Propiedad } from "../models/index.js";
+import { Categoria, Propiedad } from "../models/index.js";
 
 const inicio = async (req, res) => {
-  const [categorias, precios, casas, departamentos] = await Promise.all([
+  const [categorias, casas, departamentos] = await Promise.all([
     Categoria.findAll({ raw: true }),
-    Precio.findAll({ raw: true }),
     Propiedad.findAll({
       limit: 3,
       where: {
         idCategoria: 1,
         publicada: 1,
       },
-      include: [
-        {
-          model: Precio,
-          as: "precio",
-        },
-      ],
+      include: [{ model: Categoria, as: "categoria" }],
       order: [["createdAt", "DESC"]],
     }),
 
@@ -26,12 +20,7 @@ const inicio = async (req, res) => {
         idCategoria: 2,
         publicada: 1,
       },
-      include: [
-        {
-          model: Precio,
-          as: "precio",
-        },
-      ],
+      include: [{ model: Categoria, as: "categoria" }],
       order: [["createdAt", "DESC"]],
     }),
   ]);
@@ -40,7 +29,6 @@ const inicio = async (req, res) => {
     pagina: "Inicio",
     csrfToken: req.csrfToken(),
     categorias,
-    precios,
     casas,
     departamentos,
     usuario: req.usuario,
@@ -61,12 +49,7 @@ const categoria = async (req, res) => {
       idCategoria: id,
       publicada: 1,
     },
-    include: [
-      {
-        model: Precio,
-        as: "precio",
-      },
-    ],
+    include: [{ model: Categoria, as: "categoria" }],
   });
 
   res.render("categoria", {
@@ -101,12 +84,7 @@ const buscador = async (req, res) => {
       },
       publicada: 1,
     },
-    include: [
-      {
-        model: Precio,
-        as: "precio",
-      },
-    ],
+    include: [{ model: Categoria, as: "categoria" }],
   });
 
   res.render("busqueda", {

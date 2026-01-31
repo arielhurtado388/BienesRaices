@@ -1,4 +1,4 @@
-/*! tailwindcss v4.1.16 | MIT License | https://tailwindcss.com */
+/*! tailwindcss v4.1.18 | MIT License | https://tailwindcss.com */
 @layer properties;
 @layer theme, base, components, utilities;
 @layer theme {
@@ -276,14 +276,8 @@
   .mb-2 {
     margin-bottom: calc(var(--spacing) * 2);
   }
-  .mb-4 {
-    margin-bottom: calc(var(--spacing) * 4);
-  }
   .mb-6 {
     margin-bottom: calc(var(--spacing) * 6);
-  }
-  .mb-10 {
-    margin-bottom: calc(var(--spacing) * 10);
   }
   .block {
     display: block;
@@ -306,42 +300,18 @@
   .inline-flex {
     display: inline-flex;
   }
-  .table {
-    display: table;
-  }
   .size-6 {
     width: calc(var(--spacing) * 6);
     height: calc(var(--spacing) * 6);
   }
-  .h-12 {
-    height: calc(var(--spacing) * 12);
-  }
-  .h-16 {
-    height: calc(var(--spacing) * 16);
-  }
-  .h-17 {
-    height: calc(var(--spacing) * 17);
-  }
-  .h-18 {
-    height: calc(var(--spacing) * 18);
-  }
   .h-19 {
     height: calc(var(--spacing) * 19);
-  }
-  .h-20 {
-    height: calc(var(--spacing) * 20);
-  }
-  .h-24 {
-    height: calc(var(--spacing) * 24);
   }
   .h-29 {
     height: calc(var(--spacing) * 29);
   }
   .h-38 {
     height: calc(var(--spacing) * 38);
-  }
-  .h-48 {
-    height: calc(var(--spacing) * 48);
   }
   .h-66 {
     height: calc(var(--spacing) * 66);
@@ -378,9 +348,6 @@
   }
   .flex-1 {
     flex: 1;
-  }
-  .border-collapse {
-    border-collapse: collapse;
   }
   .transform {
     transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
@@ -568,9 +535,6 @@
   .p-6 {
     padding: calc(var(--spacing) * 6);
   }
-  .px-1 {
-    padding-inline: calc(var(--spacing) * 1);
-  }
   .px-1\.5 {
     padding-inline: calc(var(--spacing) * 1.5);
   }
@@ -588,9 +552,6 @@
   }
   .px-10 {
     padding-inline: calc(var(--spacing) * 10);
-  }
-  .py-1 {
-    padding-block: calc(var(--spacing) * 1);
   }
   .py-1\.5 {
     padding-block: calc(var(--spacing) * 1.5);
@@ -717,9 +678,6 @@
   .uppercase {
     text-transform: uppercase;
   }
-  .underline {
-    text-decoration-line: underline;
-  }
   .placeholder-gray-400 {
     &::placeholder {
       color: var(--color-gray-400);
@@ -732,10 +690,6 @@
   .shadow-md {
     --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 2px 4px -2px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-  }
-  .outline {
-    outline-style: var(--tw-outline-style);
-    outline-width: 1px;
   }
   .filter {
     filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
@@ -1040,11 +994,6 @@
   inherits: false;
   initial-value: 0 0 #0000;
 }
-@property --tw-outline-style {
-  syntax: "*";
-  inherits: false;
-  initial-value: solid;
-}
 @property --tw-blur {
   syntax: "*";
   inherits: false;
@@ -1125,7 +1074,6 @@
       --tw-ring-offset-width: 0px;
       --tw-ring-offset-color: #fff;
       --tw-ring-offset-shadow: 0 0 #0000;
-      --tw-outline-style: solid;
       --tw-blur: initial;
       --tw-brightness: initial;
       --tw-contrast: initial;

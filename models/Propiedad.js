@@ -28,6 +28,14 @@ const Propiedad = db.define("propiedades", {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  precio: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: false,
+  },
+  metrosCuadrados: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: true,
+  },
   calle: {
     type: DataTypes.STRING(60),
     allowNull: false,

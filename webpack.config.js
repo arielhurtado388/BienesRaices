@@ -8,6 +8,7 @@ export default {
     mostrarMapa: "./src/js/mostrarMapa.js",
     mapaInicio: "./src/js/mapaInicio.js",
     cambiarEstado: "./src/js/cambiarEstado.js",
+    categoriaTerreno: "./src/js/categoriaTerreno.js",
   },
   output: {
     filename: "[name].js",

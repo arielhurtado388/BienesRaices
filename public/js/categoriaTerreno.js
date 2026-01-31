@@ -10,13 +10,13 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/js/cambiarEstado.js"
-/*!*********************************!*\
-  !*** ./src/js/cambiarEstado.js ***!
-  \*********************************/
+/***/ "./src/js/categoriaTerreno.js"
+/*!************************************!*\
+  !*** ./src/js/categoriaTerreno.js ***!
+  \************************************/
 (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
 
-eval("{__webpack_require__.r(__webpack_exports__);\n(function () {\n  const cambiarEstadoBotones = document.querySelectorAll(\".cambiar-estado\");\n  const token = document\n    .querySelector(\"meta[name='csrf-token']\")\n    .getAttribute(\"content\");\n\n  cambiarEstadoBotones.forEach((boton) => {\n    boton.addEventListener(\"click\", cambiarEstadoPropiedad);\n  });\n\n  async function cambiarEstadoPropiedad(e) {\n    const { idPropiedad: id } = e.target.dataset;\n    try {\n      const url = `${window.location.origin}/propiedades/${id}`;\n      const respuesta = await fetch(url, {\n        method: \"PUT\",\n        headers: {\n          \"CSRF-Token\": token,\n        },\n      });\n      const { resultado } = await respuesta.json();\n      if (resultado) {\n        if (e.target.classList.contains(\"bg-yellow-100\")) {\n          e.target.classList.add(\"bg-green-100\", \"text-green-800\");\n          e.target.classList.remove(\"bg-yellow-100\", \"text-yellow-800\");\n          e.target.textContent = \"Publicada\";\n        } else {\n          e.target.classList.add(\"bg-yellow-100\", \"text-yellow-800\");\n          e.target.classList.remove(\"bg-green-100\", \"text-green-800\");\n          e.target.textContent = \"No publicada\";\n        }\n      }\n    } catch (error) {\n      console.log(error);\n    }\n  }\n})();\n\n\n//# sourceURL=webpack://bienesraices/./src/js/cambiarEstado.js?\n}");
+eval("{__webpack_require__.r(__webpack_exports__);\n(function () {\n  const categoriaSelect = document.querySelector(\"#categoria\");\n  const camposPropiedad = document.querySelector(\"#campos-propiedad\");\n  const metrosCuadradosContainer = document.querySelector(\n    \"#metros-cuadrados-container\"\n  );\n\n  if (!categoriaSelect || !camposPropiedad || !metrosCuadradosContainer) return;\n\n  function toggleCampos() {\n    const selectedOption =\n      categoriaSelect.options[categoriaSelect.selectedIndex];\n    const esTerreno =\n      selectedOption && selectedOption.dataset.nombre === \"Terreno\";\n\n    if (esTerreno) {\n      camposPropiedad.classList.add(\"hidden\");\n      metrosCuadradosContainer.classList.remove(\"hidden\");\n    } else {\n      camposPropiedad.classList.remove(\"hidden\");\n      metrosCuadradosContainer.classList.add(\"hidden\");\n    }\n  }\n\n  categoriaSelect.addEventListener(\"change\", toggleCampos);\n  toggleCampos();\n})();\n\n\n//# sourceURL=webpack://bienesraices/./src/js/categoriaTerreno.js?\n}");
 
 /***/ }
 
@@ -43,7 +43,7 @@ eval("{__webpack_require__.r(__webpack_exports__);\n(function () {\n  const camb
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module can't be inlined because the eval devtool is used.
 /******/ 	var __webpack_exports__ = {};
-/******/ 	__webpack_modules__["./src/js/cambiarEstado.js"](0,__webpack_exports__,__webpack_require__);
+/******/ 	__webpack_modules__["./src/js/categoriaTerreno.js"](0,__webpack_exports__,__webpack_require__);
 /******/ 	
 /******/ })()
 ;

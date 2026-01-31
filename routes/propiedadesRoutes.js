@@ -31,7 +31,7 @@ router.post(
     .isLength({ max: 1500 })
     .withMessage("La descripción debe tener máximo 1500 caracteres"),
   body("categoria").isNumeric().withMessage("Selecciona una categoría"),
-  body("precio").isNumeric().withMessage("Selecciona un rango de precios"),
+  body("precio").isFloat({ gt: 0 }).withMessage("El precio debe ser mayor a 0"),
   body("habitaciones")
     .isNumeric()
     .withMessage("Selecciona la cantidad de habitaciones"),
@@ -62,7 +62,7 @@ router.post(
     .isLength({ max: 1500 })
     .withMessage("La descripción debe tener máximo 1500 caracteres"),
   body("categoria").isNumeric().withMessage("Selecciona una categoría"),
-  body("precio").isNumeric().withMessage("Selecciona un rango de precios"),
+  body("precio").isFloat({ gt: 0 }).withMessage("El precio debe ser mayor a 0"),
   body("habitaciones")
     .isNumeric()
     .withMessage("Selecciona la cantidad de habitaciones"),
