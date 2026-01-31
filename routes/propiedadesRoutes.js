@@ -14,6 +14,7 @@ import {
   subirImagen,
   verMensajes,
 } from "../controllers/propiedadController.js";
+import { generarPDF, generarExcel } from "../controllers/reporteController.js";
 import protegerRuta from "../middleware/protegerRuta.js";
 import upload from "../middleware/subirImagen.js";
 import identificarUsuario from "../middleware/identificarUsuario.js";
@@ -73,6 +74,10 @@ router.post(
   body("lat").notEmpty().withMessage("Ubica la propiedad en el mapa"),
   guardarCambios
 );
+
+// Reportes
+router.get("/propiedades/reporte/pdf", protegerRuta, generarPDF);
+router.get("/propiedades/reporte/excel", protegerRuta, generarExcel);
 
 router.post("/propiedades/eliminar/:id", protegerRuta, eliminar);
 router.put("/propiedades/:id", protegerRuta, cambiarEstado);
